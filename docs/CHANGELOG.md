@@ -46,3 +46,11 @@ Notes:
 - Added `/mistakes` mistake book page for wrong custom-upload questions with topic filter.
 - Added Mistake Book navigation entry.
 - Preserved invariant: custom-upload mistakes/results remain separate from adaptive IRT abilities.
+
+## Sprint P7 — Learning Insights
+
+- Added `/learning-insights` dashboard page for custom-upload quiz analytics.
+- Aggregates recent custom question attempts into topic-level accuracy, wrong counts, and subtopic weakness chips.
+- Added next-focus recommendation that links directly into filtered Mistake Book review.
+- Added Learning Insights navigation entry.
+- Preserved invariant: custom-upload learning insights are derived from custom attempts only and do not update adaptive IRT abilities.
