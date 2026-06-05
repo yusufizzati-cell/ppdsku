@@ -54,3 +54,10 @@ Notes:
 - Added next-focus recommendation that links directly into filtered Mistake Book review.
 - Added Learning Insights navigation entry.
 - Preserved invariant: custom-upload learning insights are derived from custom attempts only and do not update adaptive IRT abilities.
+
+## Sprint P8 — AI Study Plan
+
+- Added `/dashboard/study-plan` page that generates a 7-day study plan from custom-upload quiz attempts.
+- Prioritizes topics by wrong-count, accuracy, and recent mistakes from `custom_question_attempts`.
+- Added direct links from plan priorities to filtered Mistake Book and latest result review.
+- Preserved invariant: study plan is generated from custom-upload practice data only and does not update adaptive IRT abilities.
