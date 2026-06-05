@@ -25,6 +25,7 @@ const sidebarItems = [
   { href: "/upload", label: "Upload Soal", icon: UploadCloud },
   { href: "/uploads", label: "Soal Saya", icon: BookOpen },
   { href: "/custom-results", label: "Hasil Upload", icon: Clock },
+  { href: "/mistakes", label: "Mistake Book", icon: RotateCcw },
   { href: "/dashboard/topic-map", label: "Peta Topik", icon: Map },
   { href: "/dashboard/recommendations", label: "Rekomendasi", icon: Lightbulb },
   { href: "/dashboard/review", label: "Review Salah", icon: RotateCcw },

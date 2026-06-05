@@ -53,7 +53,7 @@ export default async function ReviewedUploadQuizPage({
   const { data: questions } = job
     ? await supabase
         .from("extracted_questions")
-        .select("id, question_text, options, answer_key, explanation, topic, subtopic")
+        .select("id, question_number, question_text, options, answer_key, explanation, topic, subtopic, source_page, source_region, confidence, answer_confidence")
         .eq("job_id", job.id)
         .eq("review_status", "approved")
         .not("answer_key", "is", null)
