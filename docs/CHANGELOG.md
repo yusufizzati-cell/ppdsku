@@ -21,3 +21,11 @@ Notes:
 - Added approve/reject actions for extracted questions.
 - Added API routes for question edit, approve, and reject.
 - Preserved invariant: AI extraction is not final until user review.
+
+## Sprint P4 — Custom Quiz Pool from Reviewed Uploads
+
+- Added reviewed-upload quiz page at `/uploads/[id]/quiz`.
+- Added custom quiz client for approved extracted questions with answer keys.
+- Added `POST /api/custom-quiz-sessions` to persist custom practice sessions.
+- Linked review page to start quiz from approved questions.
+- Preserved IRT invariant: custom reviewed-upload quiz does not update adaptive topic abilities.
