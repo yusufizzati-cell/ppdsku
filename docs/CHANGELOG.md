@@ -37,3 +37,12 @@ Notes:
 - Linked saved reviewed-upload quiz results to their detail page after saving.
 - Added sidebar navigation item for upload quiz history.
 - Preserved invariant: custom upload quiz history is separate from adaptive IRT analytics.
+
+## Sprint P6 — Rich Result Review + Mistake Book
+
+- Added migration `005_custom_question_attempts.sql` for immutable custom quiz question snapshots.
+- Updated custom quiz save API to store full question/option/answer snapshots per attempt.
+- Upgraded `/custom-results/[id]` into rich per-question review with highlighted user answer vs answer key.
+- Added `/mistakes` mistake book page for wrong custom-upload questions with topic filter.
+- Added Mistake Book navigation entry.
+- Preserved invariant: custom-upload mistakes/results remain separate from adaptive IRT abilities.

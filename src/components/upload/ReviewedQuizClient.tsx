@@ -8,12 +8,17 @@ import { Badge } from "@/components/ui/Badge";
 
 export interface ReviewedQuizQuestion {
   id: string;
+  question_number?: number | null;
   question_text: string;
   options: Record<string, string>;
   answer_key: string;
   explanation: string | null;
   topic: string | null;
   subtopic: string | null;
+  source_page?: number | null;
+  source_region?: string | null;
+  confidence?: number | null;
+  answer_confidence?: number | null;
 }
 
 interface ReviewedQuizClientProps {
@@ -26,8 +31,16 @@ interface AnswerRecord {
   selected_answer: string;
   correct_answer: string;
   is_correct: boolean;
+  question_number?: number | null;
+  question_text: string;
+  options: Record<string, string>;
+  explanation?: string | null;
   topic?: string | null;
   subtopic?: string | null;
+  source_page?: number | null;
+  source_region?: string | null;
+  extraction_confidence?: number | null;
+  answer_confidence?: number | null;
 }
 
 export function ReviewedQuizClient({ uploadId, questions }: ReviewedQuizClientProps) {
@@ -53,8 +66,16 @@ export function ReviewedQuizClient({ uploadId, questions }: ReviewedQuizClientPr
         selected_answer: key,
         correct_answer: current.answer_key,
         is_correct: isCorrect,
+        question_number: current.question_number ?? index + 1,
+        question_text: current.question_text,
+        options: current.options,
+        explanation: current.explanation,
         topic: current.topic,
         subtopic: current.subtopic,
+        source_page: current.source_page,
+        source_region: current.source_region,
+        extraction_confidence: current.confidence,
+        answer_confidence: current.answer_confidence,
       },
     ]);
     setPhase("feedback");
