@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   LayoutDashboard,
   BookOpen,
+  UploadCloud,
   Map,
   Lightbulb,
   RotateCcw,
@@ -21,7 +22,8 @@ import {
 
 const sidebarItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/onkrad/quiz", label: "Mulai Quiz", icon: BookOpen },
+  { href: "/upload", label: "Upload Soal", icon: UploadCloud },
+  { href: "/uploads", label: "Soal Saya", icon: BookOpen },
   { href: "/dashboard/topic-map", label: "Peta Topik", icon: Map },
   { href: "/dashboard/recommendations", label: "Rekomendasi", icon: Lightbulb },
   { href: "/dashboard/review", label: "Review Salah", icon: RotateCcw },

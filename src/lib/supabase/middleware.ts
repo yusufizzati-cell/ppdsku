@@ -42,8 +42,13 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Guard dashboard routes — redirect guests to login
-  if (pathname.startsWith("/dashboard") && !user) {
+  // Protected routes — redirect guests to login
+  const protectedPrefixes = ["/dashboard", "/upload", "/uploads"];
+  const isProtected = protectedPrefixes.some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`)
+  );
+
+  if (isProtected && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     url.searchParams.set("redirect", pathname);
