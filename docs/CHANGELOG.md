@@ -29,3 +29,11 @@ Notes:
 - Added `POST /api/custom-quiz-sessions` to persist custom practice sessions.
 - Linked review page to start quiz from approved questions.
 - Preserved IRT invariant: custom reviewed-upload quiz does not update adaptive topic abilities.
+
+## Sprint P5 — Custom Quiz History
+
+- Added custom quiz history page at `/custom-results`.
+- Added custom quiz result detail page at `/custom-results/[id]`.
+- Linked saved reviewed-upload quiz results to their detail page after saving.
+- Added sidebar navigation item for upload quiz history.
+- Preserved invariant: custom upload quiz history is separate from adaptive IRT analytics.

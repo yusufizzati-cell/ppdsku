@@ -36,6 +36,7 @@ export function ReviewedQuizClient({ uploadId, questions }: ReviewedQuizClientPr
   const [answers, setAnswers] = useState<AnswerRecord[]>([]);
   const [phase, setPhase] = useState<"active" | "feedback" | "finished">("active");
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
 
   const current = questions[index];
   const correctCount = answers.filter((a) => a.is_correct).length;
@@ -86,6 +87,7 @@ export function ReviewedQuizClient({ uploadId, questions }: ReviewedQuizClientPr
       if (!res.ok || !data.success) {
         throw new Error(data.error?.message ?? "Gagal menyimpan sesi.");
       }
+      setSavedSessionId(data.data.session_id);
       setSaveState("saved");
     } catch {
       setSaveState("error");
@@ -108,6 +110,11 @@ export function ReviewedQuizClient({ uploadId, questions }: ReviewedQuizClientPr
           <Button onClick={saveSession} disabled={saveState === "saving" || saveState === "saved"}>
             {saveState === "saved" ? "Tersimpan" : saveState === "saving" ? "Menyimpan..." : "Simpan Hasil"}
           </Button>
+          {savedSessionId && (
+            <Link href={`/custom-results/${savedSessionId}`}>
+              <Button variant="secondary">Lihat Detail Hasil</Button>
+            </Link>
+          )}
           <Link href={`/uploads/${uploadId}/review`}>
             <Button variant="secondary">Kembali Review</Button>
           </Link>
