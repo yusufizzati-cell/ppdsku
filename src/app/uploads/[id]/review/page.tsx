@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { ReviewQuestionCard } from "@/components/upload/ReviewQuestionCard";
 import type { ExtractedQuestionRow } from "@/lib/extraction";
@@ -96,6 +97,19 @@ export default async function UploadReviewPage({
             <Stat label="Approved" value={approved} />
             <Stat label="Rejected" value={rejected} />
             <Stat label="Tanpa kunci" value={withoutAnswer} />
+          </div>
+
+          <div className="mt-5">
+            <Link href={`/uploads/${upload.id}/quiz`}>
+              <Button fullWidth disabled={approved === 0}>
+                Mulai Quiz dari Soal Approved
+              </Button>
+            </Link>
+            {approved === 0 && (
+              <p className="mt-2 text-center text-xs text-navy-400">
+                Approve minimal 1 soal dengan answer key dulu.
+              </p>
+            )}
           </div>
         </Card>
 
