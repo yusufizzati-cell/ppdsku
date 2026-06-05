@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { formatFileSize } from "@/lib/upload-config";
 import { FileText, Image as ImageIcon, ArrowLeft } from "lucide-react";
+import { ExtractButton } from "@/components/upload/ExtractButton";
 
 export const dynamic = "force-dynamic";
 
@@ -98,12 +99,10 @@ export default async function UploadDetailPage({
             </p>
           </div>
 
-          {/* State-driven CTA. Extraction (P2) & review (P3) come later. */}
+          {/* State-driven CTA. */}
           <div className="mt-6">
             {upload.status === "uploaded" && (
-              <Button fullWidth disabled>
-                Mulai Ekstraksi (segera — Sprint P2)
-              </Button>
+              <ExtractButton uploadId={upload.id} />
             )}
             {upload.status === "extracted" && (
               <Link href={`/uploads/${upload.id}/review`}>
@@ -121,8 +120,7 @@ export default async function UploadDetailPage({
         </Card>
 
         <p className="text-center text-xs text-navy-400">
-          Ekstraksi AI akan tersedia di Sprint P2. Saat ini file kamu sudah
-          tersimpan aman.
+          Review hasil ekstraksi wajib dilakukan sebelum soal masuk quiz adaptif.
         </p>
       </div>
     </DashboardShell>
