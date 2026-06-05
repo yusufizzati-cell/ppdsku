@@ -16,6 +16,7 @@ import {
   CalendarCheck,
   CreditCard,
   Settings,
+  Shield,
   Menu,
   X,
   LogOut,
@@ -35,6 +36,7 @@ const sidebarItems = [
   { href: "/dashboard/study-plan", label: "Study Plan", icon: CalendarCheck },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
+  { href: "/admin", label: "Admin", icon: Shield },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {

@@ -61,3 +61,12 @@ Notes:
 - Prioritizes topics by wrong-count, accuracy, and recent mistakes from `custom_question_attempts`.
 - Added direct links from plan priorities to filtered Mistake Book and latest result review.
 - Preserved invariant: study plan is generated from custom-upload practice data only and does not update adaptive IRT abilities.
+
+## Sprint P9 — Subscription + Midtrans QRIS + Admin Observability
+
+- Added Midtrans Snap transaction creation API for PRO plans.
+- Added Midtrans notification webhook with signature verification and server-side status verification.
+- Added payment metadata columns and subscription linkage migration `006_subscription_midtrans_admin.sql`.
+- Reworked `/upgrade` into PRO plan cards with payment initiation buttons.
+- Added `/admin` operational dashboard guarded by `profiles.role` and backed by service-role reads after explicit admin check.
+- Added admin metrics for users, uploads, quiz sessions, active PRO subscriptions, extraction jobs, and recent payments.
