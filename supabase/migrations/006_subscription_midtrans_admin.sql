@@ -2,8 +2,8 @@
 -- Run after migrations 001-005.
 
 ALTER TABLE payments
-  ADD COLUMN IF NOT EXISTS plan TEXT CHECK (plan IN (pro_monthly, pro_3month, pro_6month)),
-  ADD COLUMN IF NOT EXISTS currency TEXT NOT NULL DEFAULT IDR,
+  ADD COLUMN IF NOT EXISTS plan TEXT CHECK (plan IN ('pro_monthly', 'pro_3month', 'pro_6month')),
+  ADD COLUMN IF NOT EXISTS currency TEXT NOT NULL DEFAULT 'IDR',
   ADD COLUMN IF NOT EXISTS snap_token TEXT,
   ADD COLUMN IF NOT EXISTS redirect_url TEXT,
   ADD COLUMN IF NOT EXISTS payment_type TEXT,
@@ -27,7 +27,7 @@ CREATE POLICY "Admins can view all profiles" ON profiles
     EXISTS (
       SELECT 1 FROM profiles p
       WHERE p.id = auth.uid()
-      AND p.role IN (admin, super_admin)
+      AND p.role IN ('admin', 'super_admin')
     )
   );
 
@@ -37,6 +37,6 @@ CREATE POLICY "Admins can view all payments" ON payments
     EXISTS (
       SELECT 1 FROM profiles p
       WHERE p.id = auth.uid()
-      AND p.role IN (admin, super_admin)
+      AND p.role IN ('admin', 'super_admin')
     )
   );
