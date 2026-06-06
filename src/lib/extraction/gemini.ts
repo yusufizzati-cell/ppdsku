@@ -6,6 +6,7 @@
 import { ExtractedQuestionRaw, ExtractionResult } from "./types";
 
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+const GEMINI_TIMEOUT_MS = 45_000;
 
 const EXTRACTION_PROMPT = `Kamu adalah AI extractor soal ujian kedokteran Indonesia.
 
@@ -76,18 +77,34 @@ export async function extractWithGemini(
       parts.push({ text: textContent });
     }
 
-    const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts }],
-        generationConfig: {
-          temperature: 0.1,
-          maxOutputTokens: 65536,
-          responseMimeType: "application/json",
-        },
-      }),
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
+
+    let response: Response;
+    try {
+      response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{ parts }],
+          generationConfig: {
+            temperature: 0.1,
+            maxOutputTokens: 65536,
+            responseMimeType: "application/json",
+          },
+        }),
+      });
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        throw new Error(
+          `Gemini timeout setelah ${Math.round(GEMINI_TIMEOUT_MS / 1000)} detik. Coba file lebih kecil/jelas atau ulangi ekstraksi.`
+        );
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     if (!response.ok) {
       const errorBody = await response.text();
