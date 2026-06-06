@@ -30,11 +30,15 @@ export function ExtractButton({ uploadId }: ExtractButtonProps) {
         signal: controller.signal,
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") ?? "";
+      const data = contentType.includes("application/json")
+        ? await res.json()
+        : null;
 
-      if (!res.ok || !data.success) {
+      if (!res.ok || !data?.success) {
         throw new Error(
-          data.error?.message ?? "Gagal memulai ekstraksi."
+          data?.error?.message ??
+            "Server extraction sedang error. Cek konfigurasi/deploy logs, lalu coba lagi."
         );
       }
 
