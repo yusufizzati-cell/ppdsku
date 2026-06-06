@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -8,14 +8,11 @@ import {
   LayoutDashboard,
   BookOpen,
   UploadCloud,
-  Map,
-  Lightbulb,
   Brain,
   RotateCcw,
   Clock,
   CalendarCheck,
   CreditCard,
-  Settings,
   Shield,
   Menu,
   X,
@@ -26,23 +23,43 @@ const sidebarItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/upload", label: "Upload Soal", icon: UploadCloud },
   { href: "/uploads", label: "Soal Saya", icon: BookOpen },
-  { href: "/custom-results", label: "Hasil Upload", icon: Clock },
-  { href: "/mistakes", label: "Mistake Book", icon: RotateCcw },
+  { href: "/custom-results", label: "Riwayat Hasil", icon: Clock },
+  { href: "/mistakes", label: "Review Salah", icon: RotateCcw },
   { href: "/learning-insights", label: "Learning Insights", icon: Brain },
-  { href: "/dashboard/topic-map", label: "Peta Topik", icon: Map },
-  { href: "/dashboard/recommendations", label: "Rekomendasi", icon: Lightbulb },
-  { href: "/dashboard/review", label: "Review Salah", icon: RotateCcw },
-  { href: "/dashboard/history", label: "Riwayat", icon: Clock },
   { href: "/dashboard/study-plan", label: "Study Plan", icon: CalendarCheck },
-  { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
-  { href: "/admin", label: "Admin", icon: Shield },
+  { href: "/upgrade", label: "Billing / Upgrade", icon: CreditCard },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadRole() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!cancelled) {
+        setIsAdmin(["admin", "super_admin"].includes(profile?.role ?? ""));
+      }
+    }
+
+    loadRole();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -53,7 +70,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-navy-50">
-      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-navy-900/50 lg:hidden"
@@ -61,13 +77,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         />
       )}
 
-      {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] transform border-r border-navy-200 bg-white transition-transform lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] transform flex-col border-r border-navy-200 bg-white transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-navy-100 px-5">
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-navy-100 px-5">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600">
               <span className="text-sm font-bold text-white">K</span>
@@ -78,13 +93,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-navy-400"
+            className="text-navy-400 lg:hidden"
             aria-label="Close sidebar"
           >
             <X size={20} />
           </button>
         </div>
-        <nav className="p-3 space-y-1">
+
+        <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3 pb-4">
           {sidebarItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -103,8 +119,24 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
+
+          {isAdmin && (
+            <Link
+              href="/admin"
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                pathname === "/admin"
+                  ? "bg-primary-50 text-primary-700"
+                  : "text-navy-600 hover:bg-navy-50 hover:text-navy-900"
+              }`}
+            >
+              <Shield size={18} />
+              Admin
+            </Link>
+          )}
         </nav>
-        <div className="absolute bottom-0 left-0 right-0 border-t border-navy-100 p-3">
+
+        <div className="shrink-0 border-t border-navy-100 p-3">
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-navy-500 hover:bg-navy-50 hover:text-navy-700"
@@ -115,13 +147,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Main content */}
       <div className="lg:pl-[260px]">
-        {/* Top header */}
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-navy-200 bg-white/90 px-4 backdrop-blur-sm lg:px-8">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-navy-600"
+            className="text-navy-600 lg:hidden"
             aria-label="Open sidebar"
           >
             <Menu size={24} />
@@ -131,7 +161,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-3">
             <Link href="/onkrad/quiz">
-              <button className="hidden sm:inline-flex items-center gap-2 rounded-button bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+              <button className="hidden items-center gap-2 rounded-button bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 sm:inline-flex">
                 <BookOpen size={16} />
                 Mulai Quiz
               </button>
@@ -142,7 +172,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Page content */}
         <main className="p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
